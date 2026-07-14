@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard Ventas 2026 · Serproen</title>
+<title>Serproen — Dashboard Ventas 2026</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
@@ -41,7 +41,7 @@ main{max-width:1360px;margin:0 auto;padding:22px 32px 60px 32px;}
 .card{background:var(--card);border-radius:14px;padding:18px 20px;box-shadow:0 1px 3px rgba(0,0,0,.06);border:1px solid var(--border);}
 .kpi .label{font-size:11.5px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);font-weight:600;}
 .kpi .value{font-size:26px;font-weight:800;margin-top:6px;font-family:'DM Mono',monospace;}
-.kpi .delta{font-size:12.5px;margin-top:4px;font-weight:600;}
+.kpi .delta{font-size:12.5px;margin-top:4px;font-weight:600;color:var(--muted);}
 .pos{color:var(--pos);}
 .neg{color:var(--neg);}
 .charts-2{grid-template-columns:1.3fr 1fr;}
@@ -53,15 +53,21 @@ table{width:100%;border-collapse:collapse;font-size:13px;}
 th{text-align:left;padding:9px 10px;border-bottom:2px solid var(--border);color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;white-space:nowrap;}
 td{padding:9px 10px;border-bottom:1px solid #F0F2F1;font-family:'DM Mono',monospace;font-size:12.6px;}
 tr:hover td{background:#FAFBFA;}
+tr.total-row td{font-weight:700;border-top:2px solid var(--border);border-bottom:none;background:#FAFBFA;}
+tr.subtotal-row td{font-weight:700;background:#FAFBFA;}
 .right{text-align:right;}
-.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700;color:#fff;}
-.month-selector{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;}
-.month-chip{background:#fff;border:1px solid var(--border);padding:10px 18px;border-radius:10px;cursor:pointer;font-weight:600;font-size:13px;color:var(--muted);transition:.15s;}
-.month-chip:hover{border-color:var(--nav);color:var(--nav);}
-.month-chip.active{background:var(--nav);color:#fff;border-color:var(--nav);}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:7px;vertical-align:middle;}
+.linea-cell{white-space:nowrap;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;}
+.month-selector{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:18px;}
+.month-chip{background:#fff;border:1px solid var(--border);padding:14px 16px;border-radius:12px;cursor:pointer;transition:.15s;}
+.month-chip .mname{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;}
+.month-chip .mval{font-size:17px;font-weight:800;font-family:'DM Mono',monospace;margin-top:5px;}
+.month-chip .mdelta{font-size:11.5px;margin-top:3px;font-weight:600;}
+.month-chip:hover{border-color:var(--nav);}
+.month-chip.active{background:var(--nav);border-color:var(--nav);}
+.month-chip.active .mname, .month-chip.active .mval{color:#fff;}
+.month-chip.active .mdelta{color:#DCEEE4;}
 .searchbox{width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:10px;font-family:inherit;font-size:13.5px;margin-bottom:14px;}
-.note{font-size:12px;color:var(--muted);margin-top:10px;line-height:1.5;}
-.tag-hc{background:var(--hc);} .tag-psp{background:var(--psp);} .tag-res{background:var(--res);} .tag-par{background:var(--par);}
 .tablewrap{overflow-x:auto;}
 footer{text-align:center;color:var(--muted);font-size:11.5px;padding:20px;font-family:'DM Mono',monospace;}
 </style>
@@ -69,10 +75,7 @@ footer{text-align:center;color:var(--muted);font-size:11.5px;padding:20px;font-f
 <body>
 
 <header class="topbar">
-  <div>
-    <h1>Dashboard Ventas 2026 — Serproen</h1>
-    <div class="sub">Grupo Suara · Salud domiciliaria &amp; residencial</div>
-  </div>
+  <div><h1>SERPROEN · Ventas 2026</h1></div>
   <div class="sub">Actualizado a Junio 2026</div>
 </header>
 
@@ -84,17 +87,17 @@ footer{text-align:center;color:var(--muted);font-size:11.5px;padding:20px;font-f
 
 <script>
 /* ============ DATOS ============ */
-const DATA = {"monthly_area": {"Enero": {"Particulares": 33014666.0, "HC B2B": 197676327.0, "PSP": 113750378.0, "Residencia": 155483189.0}, "Febrero": {"Particulares": 28549642.0, "HC B2B": 177761249.0, "PSP": 123842704.0, "Residencia": 152359572.0}, "Marzo": {"Particulares": 37897823.0, "HC B2B": 199718661.0, "PSP": 136649839.0, "Residencia": 146965040.0}, "Abril": {"Particulares": 32147286.0, "HC B2B": 228277404.0, "PSP": 142781535.0, "Residencia": 110851738.0}, "Mayo": {"Particulares": 32549588.0, "HC B2B": 273155853.0, "PSP": 140116843.0, "Residencia": 88395170.0}, "Junio": {"Particulares": 28613859.0, "HC B2B": 211118136.0, "PSP": 148179593.0, "Residencia": 89297476.0}}, "monthly_area_budget": {"Enero": {"Particulares": 34500000.0, "HC B2B": 187751800.0, "PSP": 102858800.0, "Residencia": 129500000.0}, "Febrero": {"Particulares": 29500000.0, "HC B2B": 172751800.0, "PSP": 90872800.0, "Residencia": 129500000.0}, "Marzo": {"Particulares": 34500000.0, "HC B2B": 187751800.0, "PSP": 149000800.0, "Residencia": 145500000.0}, "Abril": {"Particulares": 34500000.0, "HC B2B": 192951800.0, "PSP": 176733078.0, "Residencia": 154500000.0}, "Mayo": {"Particulares": 34500000.0, "HC B2B": 221451800.0, "PSP": 186730000.0, "Residencia": 163500000.0}, "Junio": {"Particulares": 34500000.0, "HC B2B": 239701800.0, "PSP": 205264800.0, "Residencia": 163500000.0}}, "client_month": {"MUTUAL Santiago": {"Enero": 101941841.0, "Febrero": 87896484.0, "Marzo": 113372645.0, "Abril": 108175044.0, "Mayo": 113170169.0, "Junio": 103746801.0}, "ESACHS": {"Enero": 60079095.0, "Febrero": 58450691.0, "Marzo": 53887625.0, "Abril": 61503476.0, "Mayo": 58441776.0, "Junio": 58149425.0}, "SANOFI": {"Enero": 44680772.0, "Febrero": 54415056.0, "Marzo": 51993714.0, "Abril": 50261189.0, "Mayo": 49649831.0, "Junio": 51643653.0}, "HOSPITAL SAN JUAN DE DIOS": {"Enero": 45291000.0, "Febrero": 49662000.0, "Marzo": 49086900.0, "Abril": 55149000.0, "Mayo": 46314000.0, "Junio": 43431000.0}, "HOSPITAL SOTERO DEL RIO": {"Enero": 63704000.0, "Febrero": 65812000.0, "Marzo": 61632000.0, "Abril": 16092000.0, "Mayo": 3132000.0, "Junio": 0.0}, "MUTUAL Viña": {"Enero": 30623917.0, "Febrero": 25877090.0, "Marzo": 28452717.0, "Abril": 35828960.0, "Mayo": 40412623.0, "Junio": 34683346.0}, "PFIZER DE CHILE": {"Enero": 32738961.0, "Febrero": 28746732.0, "Marzo": 28119967.0, "Abril": 31336344.0, "Mayo": 30545495.0, "Junio": 35282243.0}, "HC Stgo. (Particulares)": {"Enero": 28197437.0, "Febrero": 25806179.0, "Marzo": 34941590.0, "Abril": 29225226.0, "Mayo": 29354595.0, "Junio": 24198985.0}, "Residencia AM (Particulares)": {"Enero": 28062073.0, "Febrero": 24331408.0, "Marzo": 22424756.0, "Abril": 20310532.0, "Mayo": 20846331.0, "Junio": 18393615.0}, "PTC": {"Enero": 18017373.0, "Febrero": 16367992.0, "Marzo": 17303001.0, "Abril": 16028472.0, "Mayo": 16891375.0, "Junio": 16591426.0}, "ASTRAZENECA": {"Enero": 9760191.0, "Febrero": 8770981.0, "Marzo": 12872858.0, "Abril": 21058421.0, "Mayo": 19600000.0, "Junio": 18265566.0}, "OPERATIVOS": {"Enero": 0, "Febrero": 0.0, "Marzo": 0.0, "Abril": 18764250.0, "Mayo": 56444411.0, "Junio": 10532890.0}, "HOSPITAL DEL SALVADOR": {"Enero": 13475602.0, "Febrero": 8082732.0, "Marzo": 8870870.0, "Abril": 9749690.0, "Mayo": 11051292.0, "Junio": 14336175.0}, "BIOMARIN CHILE": {"Enero": 4255295.0, "Febrero": 6972133.0, "Marzo": 9824066.0, "Abril": 6070629.0, "Mayo": 6048622.0, "Junio": 8665095.0}, "ISAPRE CRUZ BLANCA": {"Enero": 4950514.0, "Febrero": 4471432.0, "Marzo": 4950514.0, "Abril": 4905810.0, "Mayo": 5069337.0, "Junio": 4905811.0}, "MERCK": {"Enero": -791578.0, "Febrero": 2499359.0, "Marzo": 3778874.0, "Abril": 4798699.0, "Mayo": 5719208.0, "Junio": 9028781.0}, "Serv.Aux. PFIZER Stgo.": {"Enero": 4005674.0, "Febrero": 4005674.0, "Marzo": 4005674.0, "Abril": 4005674.0, "Mayo": 4005674.0, "Junio": 4005674.0}, "LINDE GAS CHILE": {"Enero": 2282772.0, "Febrero": 3709068.0, "Marzo": 4470270.0, "Abril": 4533992.0, "Mayo": 3512554.0, "Junio": 3590688.0}, "HC Viña (Particulares)": {"Enero": 4817229.0, "Febrero": 2743463.0, "Marzo": 2956233.0, "Abril": 2922060.0, "Mayo": 3194993.0, "Junio": 4414874.0}, "FARMAHUB": {"Enero": 0.0, "Febrero": 0.0, "Marzo": 5744356.0, "Abril": 5773065.0, "Mayo": 5813416.0, "Junio": 2883359.0}, "COLMENA": {"Enero": 1800750.0, "Febrero": 1389150.0, "Marzo": 1800750.0, "Abril": 2212350.0, "Mayo": 1800750.0, "Junio": 1800750.0}, "UNIVERSIDAD ANDRES BELLO": {"Enero": 0, "Febrero": 0, "Marzo": 0, "Abril": 0, "Mayo": 0, "Junio": 8230875.0}, "UNIVERSIDAD DE LAS AMERICAS": {"Enero": 0, "Febrero": 0, "Marzo": 0, "Abril": 4644706.0, "Mayo": 1982210.0, "Junio": 0.0}, "MEGASALUD": {"Enero": 1025800.0, "Febrero": 1025800.0, "Marzo": 0.0, "Abril": 0.0, "Mayo": 681200.0, "Junio": 0.0}, "ASTELLAS": {"Enero": 679250.0, "Febrero": 679250.0, "Marzo": 209000.0, "Abril": 209000.0, "Mayo": 209000.0, "Junio": 428032.0}, "MCA": {"Enero": 326592.0, "Febrero": 412983.0, "Marzo": 412983.0, "Abril": 499374.0, "Mayo": 326592.0, "Junio": 0.0}, "GENETICS": {"Enero": 0, "Febrero": 505510.0, "Marzo": 0.0, "Abril": 0.0, "Mayo": 0.0, "Junio": 0.0}}, "client_area": {"MUTUAL Santiago": "HC B2B", "ESACHS": "HC B2B", "SANOFI": "PSP", "HOSPITAL SAN JUAN DE DIOS": "Residencia", "HOSPITAL SOTERO DEL RIO": "Residencia", "MUTUAL Viña": "HC B2B", "PFIZER DE CHILE": "PSP", "HC Stgo. (Particulares)": "Particulares", "Residencia AM (Particulares)": "Residencia", "PTC": "PSP", "ASTRAZENECA": "PSP", "OPERATIVOS": "HC B2B", "HOSPITAL DEL SALVADOR": "Residencia", "BIOMARIN CHILE": "PSP", "ISAPRE CRUZ BLANCA": "Residencia", "MERCK": "PSP", "Serv.Aux. PFIZER Stgo.": "HC B2B", "LINDE GAS CHILE": "PSP", "HC Viña (Particulares)": "Particulares", "FARMAHUB": "PSP", "COLMENA": "PSP", "UNIVERSIDAD ANDRES BELLO": "Residencia", "UNIVERSIDAD DE LAS AMERICAS": "Residencia", "MEGASALUD": "HC B2B", "ASTELLAS": "PSP", "MCA": "PSP", "GENETICS": "HC B2B"}, "client_total": {"MUTUAL Santiago": 628302984.0, "ESACHS": 350512088.0, "SANOFI": 302644215.0, "HOSPITAL SAN JUAN DE DIOS": 288933900.0, "HOSPITAL SOTERO DEL RIO": 210372000.0, "MUTUAL Viña": 195878653.0, "PFIZER DE CHILE": 186769742.0, "HC Stgo. (Particulares)": 171724012.0, "Residencia AM (Particulares)": 134368715.0, "PTC": 101199639.0, "ASTRAZENECA": 90328017.0, "OPERATIVOS": 85741551.0, "HOSPITAL DEL SALVADOR": 65566361.0, "BIOMARIN CHILE": 41835840.0, "ISAPRE CRUZ BLANCA": 29253418.0, "MERCK": 25033343.0, "Serv.Aux. PFIZER Stgo.": 24034044.0, "LINDE GAS CHILE": 22099344.0, "HC Viña (Particulares)": 21048852.0, "FARMAHUB": 20214196.0, "COLMENA": 10804500.0, "UNIVERSIDAD ANDRES BELLO": 8230875.0, "UNIVERSIDAD DE LAS AMERICAS": 6626916.0, "MEGASALUD": 2732800.0, "ASTELLAS": 2413532.0, "MCA": 1978524.0, "GENETICS": 505510.0}};
+const DATA = {"monthly_area": {"Enero": {"HC B2B": 197676327.0, "PSP": 113750378.0, "Residencia": 155483189.0, "Particulares": 33014666.0}, "Febrero": {"HC B2B": 177761249.0, "PSP": 123842704.0, "Residencia": 152359572.0, "Particulares": 28549642.0}, "Marzo": {"HC B2B": 199718661.0, "PSP": 136649839.0, "Residencia": 146965040.0, "Particulares": 37897823.0}, "Abril": {"HC B2B": 228277404.0, "PSP": 142781535.0, "Residencia": 110851738.0, "Particulares": 32147286.0}, "Mayo": {"HC B2B": 273155853.0, "PSP": 140116843.0, "Residencia": 88395170.0, "Particulares": 32549588.0}, "Junio": {"HC B2B": 211118136.0, "PSP": 148179593.0, "Residencia": 89297476.0, "Particulares": 28613859.0}}, "monthly_area_budget": {"Enero": {"HC B2B": 187751800.0, "PSP": 102858800.0, "Residencia": 129500000.0, "Particulares": 34500000.0}, "Febrero": {"HC B2B": 172751800.0, "PSP": 90872800.0, "Residencia": 129500000.0, "Particulares": 29500000.0}, "Marzo": {"HC B2B": 187751800.0, "PSP": 149000800.0, "Residencia": 145500000.0, "Particulares": 34500000.0}, "Abril": {"HC B2B": 192951800.0, "PSP": 176733078.0, "Residencia": 154500000.0, "Particulares": 34500000.0}, "Mayo": {"HC B2B": 221451800.0, "PSP": 186730000.0, "Residencia": 163500000.0, "Particulares": 34500000.0}, "Junio": {"HC B2B": 239701800.0, "PSP": 205264800.0, "Residencia": 163500000.0, "Particulares": 34500000.0}}, "client_month": {"MUTUAL Santiago": {"Enero": 101941841.0, "Febrero": 87896484.0, "Marzo": 113372645.0, "Abril": 108175044.0, "Mayo": 113170169.0, "Junio": 103746801.0}, "ESACHS": {"Enero": 60079095.0, "Febrero": 58450691.0, "Marzo": 53887625.0, "Abril": 61503476.0, "Mayo": 58441776.0, "Junio": 58149425.0}, "SANOFI": {"Enero": 44680772.0, "Febrero": 54415056.0, "Marzo": 51993714.0, "Abril": 50261189.0, "Mayo": 49649831.0, "Junio": 51643653.0}, "HOSPITAL SAN JUAN DE DIOS": {"Enero": 45291000.0, "Febrero": 49662000.0, "Marzo": 49086900.0, "Abril": 55149000.0, "Mayo": 46314000.0, "Junio": 43431000.0}, "HOSPITAL SOTERO DEL RIO": {"Enero": 63704000.0, "Febrero": 65812000.0, "Marzo": 61632000.0, "Abril": 16092000.0, "Mayo": 3132000.0, "Junio": 0.0}, "MUTUAL Viña": {"Enero": 30623917.0, "Febrero": 25877090.0, "Marzo": 28452717.0, "Abril": 35828960.0, "Mayo": 40412623.0, "Junio": 34683346.0}, "PFIZER DE CHILE": {"Enero": 32738961.0, "Febrero": 28746732.0, "Marzo": 28119967.0, "Abril": 31336344.0, "Mayo": 30545495.0, "Junio": 35282243.0}, "HC Stgo. (Particulares)": {"Enero": 28197437.0, "Febrero": 25806179.0, "Marzo": 34941590.0, "Abril": 29225226.0, "Mayo": 29354595.0, "Junio": 24198985.0}, "Residencia AM (Particulares)": {"Enero": 28062073.0, "Febrero": 24331408.0, "Marzo": 22424756.0, "Abril": 20310532.0, "Mayo": 20846331.0, "Junio": 18393615.0}, "PTC": {"Enero": 18017373.0, "Febrero": 16367992.0, "Marzo": 17303001.0, "Abril": 16028472.0, "Mayo": 16891375.0, "Junio": 16591426.0}, "ASTRAZENECA": {"Enero": 9760191.0, "Febrero": 8770981.0, "Marzo": 12872858.0, "Abril": 21058421.0, "Mayo": 19600000.0, "Junio": 18265566.0}, "OPERATIVOS": {"Enero": 0, "Febrero": 0.0, "Marzo": 0.0, "Abril": 18764250.0, "Mayo": 56444411.0, "Junio": 10532890.0}, "HOSPITAL DEL SALVADOR": {"Enero": 13475602.0, "Febrero": 8082732.0, "Marzo": 8870870.0, "Abril": 9749690.0, "Mayo": 11051292.0, "Junio": 14336175.0}, "BIOMARIN CHILE": {"Enero": 4255295.0, "Febrero": 6972133.0, "Marzo": 9824066.0, "Abril": 6070629.0, "Mayo": 6048622.0, "Junio": 8665095.0}, "ISAPRE CRUZ BLANCA": {"Enero": 4950514.0, "Febrero": 4471432.0, "Marzo": 4950514.0, "Abril": 4905810.0, "Mayo": 5069337.0, "Junio": 4905811.0}, "MERCK": {"Enero": -791578.0, "Febrero": 2499359.0, "Marzo": 3778874.0, "Abril": 4798699.0, "Mayo": 5719208.0, "Junio": 9028781.0}, "Serv.Aux. PFIZER Stgo.": {"Enero": 4005674.0, "Febrero": 4005674.0, "Marzo": 4005674.0, "Abril": 4005674.0, "Mayo": 4005674.0, "Junio": 4005674.0}, "LINDE GAS CHILE": {"Enero": 2282772.0, "Febrero": 3709068.0, "Marzo": 4470270.0, "Abril": 4533992.0, "Mayo": 3512554.0, "Junio": 3590688.0}, "HC Viña (Particulares)": {"Enero": 4817229.0, "Febrero": 2743463.0, "Marzo": 2956233.0, "Abril": 2922060.0, "Mayo": 3194993.0, "Junio": 4414874.0}, "FARMAHUB": {"Enero": 0.0, "Febrero": 0.0, "Marzo": 5744356.0, "Abril": 5773065.0, "Mayo": 5813416.0, "Junio": 2883359.0}, "COLMENA": {"Enero": 1800750.0, "Febrero": 1389150.0, "Marzo": 1800750.0, "Abril": 2212350.0, "Mayo": 1800750.0, "Junio": 1800750.0}, "UNIVERSIDAD ANDRES BELLO": {"Enero": 0, "Febrero": 0, "Marzo": 0, "Abril": 0, "Mayo": 0, "Junio": 8230875.0}, "UNIVERSIDAD DE LAS AMERICAS": {"Enero": 0, "Febrero": 0, "Marzo": 0, "Abril": 4644706.0, "Mayo": 1982210.0, "Junio": 0.0}, "MEGASALUD": {"Enero": 1025800.0, "Febrero": 1025800.0, "Marzo": 0.0, "Abril": 0.0, "Mayo": 681200.0, "Junio": 0.0}, "ASTELLAS": {"Enero": 679250.0, "Febrero": 679250.0, "Marzo": 209000.0, "Abril": 209000.0, "Mayo": 209000.0, "Junio": 428032.0}, "MCA": {"Enero": 326592.0, "Febrero": 412983.0, "Marzo": 412983.0, "Abril": 499374.0, "Mayo": 326592.0, "Junio": 0.0}, "GENETICS": {"Enero": 0, "Febrero": 505510.0, "Marzo": 0.0, "Abril": 0.0, "Mayo": 0.0, "Junio": 0.0}}, "client_area": {"MUTUAL Santiago": "HC B2B", "ESACHS": "HC B2B", "SANOFI": "PSP", "HOSPITAL SAN JUAN DE DIOS": "Residencia", "HOSPITAL SOTERO DEL RIO": "Residencia", "MUTUAL Viña": "HC B2B", "PFIZER DE CHILE": "PSP", "HC Stgo. (Particulares)": "Particulares", "Residencia AM (Particulares)": "Residencia", "PTC": "PSP", "ASTRAZENECA": "PSP", "OPERATIVOS": "HC B2B", "HOSPITAL DEL SALVADOR": "Residencia", "BIOMARIN CHILE": "PSP", "ISAPRE CRUZ BLANCA": "Residencia", "MERCK": "PSP", "Serv.Aux. PFIZER Stgo.": "HC B2B", "LINDE GAS CHILE": "PSP", "HC Viña (Particulares)": "Particulares", "FARMAHUB": "PSP", "COLMENA": "PSP", "UNIVERSIDAD ANDRES BELLO": "Residencia", "UNIVERSIDAD DE LAS AMERICAS": "Residencia", "MEGASALUD": "HC B2B", "ASTELLAS": "PSP", "MCA": "PSP", "GENETICS": "HC B2B"}, "client_total": {"MUTUAL Santiago": 628302984.0, "ESACHS": 350512088.0, "SANOFI": 302644215.0, "HOSPITAL SAN JUAN DE DIOS": 288933900.0, "HOSPITAL SOTERO DEL RIO": 210372000.0, "MUTUAL Viña": 195878653.0, "PFIZER DE CHILE": 186769742.0, "HC Stgo. (Particulares)": 171724012.0, "Residencia AM (Particulares)": 134368715.0, "PTC": 101199639.0, "ASTRAZENECA": 90328017.0, "OPERATIVOS": 85741551.0, "HOSPITAL DEL SALVADOR": 65566361.0, "BIOMARIN CHILE": 41835840.0, "ISAPRE CRUZ BLANCA": 29253418.0, "MERCK": 25033343.0, "Serv.Aux. PFIZER Stgo.": 24034044.0, "LINDE GAS CHILE": 22099344.0, "HC Viña (Particulares)": 21048852.0, "FARMAHUB": 20214196.0, "COLMENA": 10804500.0, "UNIVERSIDAD ANDRES BELLO": 8230875.0, "UNIVERSIDAD DE LAS AMERICAS": 6626916.0, "MEGASALUD": 2732800.0, "ASTELLAS": 2413532.0, "MCA": 1978524.0, "GENETICS": 505510.0}};
 const MESES = ["Enero","Febrero","Marzo","Abril","Mayo","Junio"];
 const AREAS = ["HC B2B","PSP","Residencia","Particulares"];
 const COLOR = {"HC B2B":"#2E8B57","PSP":"#5B4AC8","Residencia":"#C07C10","Particulares":"#0B7A7A"};
-const TAGCLASS = {"HC B2B":"tag-hc","PSP":"tag-psp","Residencia":"tag-res","Particulares":"tag-par"};
-const YOY_2025_ENE_JUN = 3404000000; // dato externo entregado por el usuario
+const YOY_2025_ENE_JUN = 3404000000;
 
 function fmtM(v){ return "$" + (v/1e6).toLocaleString('es-CL',{minimumFractionDigits:1,maximumFractionDigits:1}) + "M"; }
+function fmtMSign(v){ const s=v>=0?"+":"−"; return s+"$"+Math.abs(v/1e6).toLocaleString('es-CL',{minimumFractionDigits:1,maximumFractionDigits:1})+"M"; }
 function fmtPct(v){ const s = v>=0?"+":""; return s + v.toFixed(1) + "%"; }
+function dot(area){ return `<span class="dot" style="background:${COLOR[area]}"></span>`; }
 
-/* Totales por mes y acumulados */
 const totalMes = {}; MESES.forEach(m=>{ totalMes[m] = AREAS.reduce((s,a)=>s+DATA.monthly_area[m][a],0); });
 const budgetMes = {}; MESES.forEach(m=>{ budgetMes[m] = AREAS.reduce((s,a)=>s+DATA.monthly_area_budget[m][a],0); });
 const totalAcum = MESES.reduce((s,m)=>s+totalMes[m],0);
@@ -103,8 +106,8 @@ const areaAcum = {}; AREAS.forEach(a=>{ areaAcum[a] = MESES.reduce((s,m)=>s+DATA
 const areaBudgetAcum = {}; AREAS.forEach(a=>{ areaBudgetAcum[a] = MESES.reduce((s,m)=>s+DATA.monthly_area_budget[m][a],0); });
 const clientesTop = Object.entries(DATA.client_total).sort((a,b)=>b[1]-a[1]);
 const numClientesActivos = clientesTop.filter(c=>c[1]>0).length;
+const lineaLider = AREAS.reduce((best,a)=> areaAcum[a]>areaAcum[best]?a:best, AREAS[0]);
 
-/* ============ NAV / TABS ============ */
 const TABS = [
   {id:'resumen', label:'Resumen'},
   {id:'pormes', label:'Por mes'},
@@ -137,7 +140,6 @@ function activateTab(id){
   document.querySelectorAll('.tabpanel').forEach(p=>p.classList.toggle('active', p.id==='panel-'+id));
   if(!built[id]){ buildTab(id); built[id]=true; }
 }
-
 function buildTab(id){
   if(id==='resumen') buildResumen();
   if(id==='pormes') buildPorMes();
@@ -149,48 +151,61 @@ function buildTab(id){
   if(id==='clientes') buildClientes();
 }
 
-/* ============ TAB: RESUMEN ============ */
 function buildResumen(){
   const panel = document.getElementById('panel-resumen');
   const yoyPct = (totalAcum - YOY_2025_ENE_JUN)/YOY_2025_ENE_JUN*100;
   const vsBudget = (totalAcum-budgetAcum)/budgetAcum*100;
   panel.innerHTML = `
     <div class="grid kpis">
-      <div class="card kpi"><div class="label">Venta acumulada Ene–Jun 2026</div><div class="value">${fmtM(totalAcum)}</div><div class="delta">vs Budget ${fmtM(budgetAcum)}</div></div>
-      <div class="card kpi"><div class="label">vs Budget acumulado</div><div class="value ${vsBudget>=0?'pos':'neg'}">${fmtPct(vsBudget)}</div><div class="delta">${fmtM(totalAcum-budgetAcum)}</div></div>
-      <div class="card kpi"><div class="label">YoY vs Ene–Jun 2025</div><div class="value ${yoyPct>=0?'pos':'neg'}">${fmtPct(yoyPct)}</div><div class="delta">2025: ${fmtM(YOY_2025_ENE_JUN)}</div></div>
-      <div class="card kpi"><div class="label">Clientes activos</div><div class="value">${numClientesActivos}</div><div class="delta">con venta registrada en el período</div></div>
+      <div class="card kpi"><div class="label">Acumulado Ene–Jun 2026 · Total Venta</div><div class="value">${fmtM(totalAcum)}</div><div class="delta">vs Budget ${fmtPct(vsBudget)}</div></div>
+      <div class="card kpi"><div class="label">vs 2025 Ene–Jun</div><div class="value">${fmtM(YOY_2025_ENE_JUN)}</div><div class="delta ${yoyPct>=0?'pos':'neg'}">2026: ${fmtPct(yoyPct)} YoY</div></div>
+      <div class="card kpi"><div class="label">HC B2B</div><div class="value">${fmtM(areaAcum['HC B2B'])}</div><div class="delta ${(areaAcum['HC B2B']-areaBudgetAcum['HC B2B'])>=0?'pos':'neg'}">vs Budget ${fmtPct((areaAcum['HC B2B']-areaBudgetAcum['HC B2B'])/areaBudgetAcum['HC B2B']*100)}</div></div>
+      <div class="card kpi"><div class="label">PSP</div><div class="value">${fmtM(areaAcum['PSP'])}</div><div class="delta ${(areaAcum['PSP']-areaBudgetAcum['PSP'])>=0?'pos':'neg'}">vs Budget ${fmtPct((areaAcum['PSP']-areaBudgetAcum['PSP'])/areaBudgetAcum['PSP']*100)}</div></div>
+      <div class="card kpi"><div class="label">Residencia</div><div class="value">${fmtM(areaAcum['Residencia'])}</div><div class="delta ${(areaAcum['Residencia']-areaBudgetAcum['Residencia'])>=0?'pos':'neg'}">vs Budget ${fmtPct((areaAcum['Residencia']-areaBudgetAcum['Residencia'])/areaBudgetAcum['Residencia']*100)}</div></div>
     </div>
     <div class="grid charts-2">
-      <div class="card"><h3>Venta mensual por línea de negocio</h3><canvas id="chartResumenStack"></canvas></div>
-      <div class="card"><h3>Participación acumulada por línea</h3><canvas id="chartResumenDonut"></canvas></div>
+      <div class="card"><h3>Venta mensual por línea ($M)</h3><canvas id="chartResumenStack"></canvas></div>
+      <div class="card"><h3>Venta vs Budget acumulado ($M)</h3><canvas id="chartResumenBudget"></canvas></div>
     </div>
     <div class="grid charts-1" style="margin-top:16px;">
-      <div class="card"><h3>Venta vs Budget mensual (total Serproen)</h3><canvas id="chartResumenBudget"></canvas></div>
+      <div class="card"><h3>Comparación YoY acumulado Ene–Jun ($M)</h3><canvas id="chartResumenYoY"></canvas></div>
     </div>
-    <div class="note">Nota: la línea "Facturado" del archivo fuente se excluye permanentemente de todas las vistas; la venta mostrada corresponde a Facturado + Provisión + Reverso de cada mes. Junio incluye clientes institucionales con provisión aún pendiente de cierre (p.ej. H. Sótero del Río, U. de las Américas), por lo que la cifra podría ajustarse al consolidar el mes.</div>
+    <div class="card" style="margin-top:16px;">
+      <h3>Resumen por línea — Ene–Jun 2026</h3>
+      <div class="tablewrap"><table><thead><tr><th>Línea</th><th class="right">Venta</th><th class="right">Budget</th><th class="right">vs Budget</th><th class="right">Participación</th></tr></thead><tbody id="tblResumen"></tbody></table></div>
+    </div>
   `;
   charts.stack = new Chart(document.getElementById('chartResumenStack'), {
     type:'bar',
     data:{ labels:MESES, datasets: AREAS.map(a=>({label:a, data:MESES.map(m=>DATA.monthly_area[m][a]), backgroundColor:COLOR[a]})) },
     options:{ responsive:true, plugins:{legend:{position:'bottom'}}, scales:{ x:{stacked:true}, y:{stacked:true, ticks:{callback:v=>fmtM(v)}} } }
   });
-  charts.donut = new Chart(document.getElementById('chartResumenDonut'), {
-    type:'doughnut',
-    data:{ labels:AREAS, datasets:[{data:AREAS.map(a=>areaAcum[a]), backgroundColor:AREAS.map(a=>COLOR[a])}] },
-    options:{ responsive:true, plugins:{legend:{position:'bottom'}} }
-  });
   charts.budget = new Chart(document.getElementById('chartResumenBudget'), {
     type:'bar',
-    data:{ labels:MESES, datasets:[
-      {label:'Venta', data:MESES.map(m=>totalMes[m]), backgroundColor:'#1F5C3A'},
-      {label:'Budget', data:MESES.map(m=>budgetMes[m]), backgroundColor:'#C9D3CE'}
+    data:{ labels:AREAS, datasets:[
+      {label:'Venta', data:AREAS.map(a=>areaAcum[a]), backgroundColor:AREAS.map(a=>COLOR[a])},
+      {label:'Budget', data:AREAS.map(a=>areaBudgetAcum[a]), backgroundColor:'#C9D3CE'}
     ]},
     options:{ responsive:true, plugins:{legend:{position:'bottom'}}, scales:{y:{ticks:{callback:v=>fmtM(v)}}} }
   });
+  charts.yoy = new Chart(document.getElementById('chartResumenYoY'), {
+    type:'bar',
+    data:{ labels:['Ene–Jun'], datasets:[
+      {label:'2025', data:[YOY_2025_ENE_JUN], backgroundColor:'#C9D3CE'},
+      {label:'2026', data:[totalAcum], backgroundColor:'#1F5C3A'}
+    ]},
+    options:{ indexAxis:'y', responsive:true, plugins:{legend:{position:'bottom'}}, scales:{x:{ticks:{callback:v=>fmtM(v)}}} }
+  });
+  const tbody = document.getElementById('tblResumen');
+  AREAS.forEach(a=>{
+    const dif = (areaAcum[a]-areaBudgetAcum[a])/areaBudgetAcum[a]*100;
+    const part = areaAcum[a]/totalAcum*100;
+    tbody.innerHTML += `<tr><td class="linea-cell">${dot(a)}${a}</td><td class="right">${fmtM(areaAcum[a])}</td><td class="right">${fmtM(areaBudgetAcum[a])}</td><td class="right ${dif>=0?'pos':'neg'}">${fmtPct(dif)}</td><td class="right">${part.toFixed(1)}%</td></tr>`;
+  });
+  const difT = (totalAcum-budgetAcum)/budgetAcum*100;
+  tbody.innerHTML += `<tr class="total-row"><td>TOTAL</td><td class="right">${fmtM(totalAcum)}</td><td class="right">${fmtM(budgetAcum)}</td><td class="right ${difT>=0?'pos':'neg'}">${fmtPct(difT)}</td><td class="right">100%</td></tr>`;
 }
 
-/* ============ TAB: POR MES ============ */
 let mesSeleccionado = 'Junio';
 function buildPorMes(){
   const panel = document.getElementById('panel-pormes');
@@ -198,58 +213,55 @@ function buildPorMes(){
     <div class="month-selector" id="monthSelector"></div>
     <div class="grid charts-2">
       <div class="card"><h3 id="pmTitle"></h3><canvas id="chartPorMes"></canvas></div>
-      <div class="card">
-        <h3>Detalle por línea</h3>
-        <div class="tablewrap"><table id="tablaPorMes"><thead><tr><th>Línea</th><th class="right">Venta</th><th class="right">Budget</th><th class="right">Dif. %</th></tr></thead><tbody></tbody></table></div>
-      </div>
+      <div class="card"><h3>Evolución mensual total ($M)</h3><canvas id="chartPorMesEvol"></canvas></div>
     </div>
   `;
   const sel = document.getElementById('monthSelector');
   MESES.forEach(m=>{
     const chip = document.createElement('div');
     chip.className = 'month-chip'+(m===mesSeleccionado?' active':'');
-    chip.textContent = m;
+    const delta = totalMes[m]-budgetMes[m];
+    chip.innerHTML = `<div class="mname">${m}</div><div class="mval">${fmtM(totalMes[m])}</div><div class="mdelta">vs Bgt ${fmtMSign(delta)}</div>`;
     chip.onclick = ()=>{ mesSeleccionado=m; renderPorMes(); };
     sel.appendChild(chip);
   });
-  renderPorMes(true);
+  charts.pormesEvol = new Chart(document.getElementById('chartPorMesEvol'), {
+    type:'line',
+    data:{ labels:MESES, datasets:[
+      {label:'Venta', data:MESES.map(m=>totalMes[m]), borderColor:'#1F5C3A', backgroundColor:'#1F5C3A22', fill:true, tension:.3},
+      {label:'Budget', data:MESES.map(m=>budgetMes[m]), borderColor:'#9AA6A0', borderDash:[5,4], fill:false, tension:.2}
+    ]},
+    options:{ responsive:true, plugins:{legend:{position:'bottom'}}, scales:{y:{ticks:{callback:v=>fmtM(v)}}} }
+  });
+  renderPorMes();
 }
-function renderPorMes(first){
-  document.querySelectorAll('#monthSelector .month-chip').forEach(c=>c.classList.toggle('active', c.textContent===mesSeleccionado));
-  document.getElementById('pmTitle').textContent = 'Venta por línea — ' + mesSeleccionado + ' 2026';
-  const vals = AREAS.map(a=>DATA.monthly_area[mesSeleccionado][a]);
+function renderPorMes(){
+  document.querySelectorAll('#monthSelector .month-chip').forEach((c,i)=>c.classList.toggle('active', MESES[i]===mesSeleccionado));
+  document.getElementById('pmTitle').textContent = mesSeleccionado + ' — Venta vs Budget por línea';
   if(charts.pormes) charts.pormes.destroy();
   charts.pormes = new Chart(document.getElementById('chartPorMes'), {
     type:'bar',
-    data:{ labels:AREAS, datasets:[{data:vals, backgroundColor:AREAS.map(a=>COLOR[a])}] },
-    options:{ responsive:true, plugins:{legend:{display:false}}, scales:{y:{ticks:{callback:v=>fmtM(v)}}} }
+    data:{ labels:AREAS, datasets:[
+      {label:'Venta', data:AREAS.map(a=>DATA.monthly_area[mesSeleccionado][a]), backgroundColor:AREAS.map(a=>COLOR[a])},
+      {label:'Budget', data:AREAS.map(a=>DATA.monthly_area_budget[mesSeleccionado][a]), backgroundColor:'#C9D3CE'}
+    ] },
+    options:{ responsive:true, plugins:{legend:{position:'bottom'}}, scales:{y:{ticks:{callback:v=>fmtM(v)}}} }
   });
-  const tbody = document.querySelector('#tablaPorMes tbody');
-  tbody.innerHTML = '';
-  let totV=0, totB=0;
-  AREAS.forEach(a=>{
-    const v = DATA.monthly_area[mesSeleccionado][a];
-    const b = DATA.monthly_area_budget[mesSeleccionado][a];
-    totV+=v; totB+=b;
-    const dif = (v-b)/b*100;
-    tbody.innerHTML += `<tr><td><span class="badge ${TAGCLASS[a]}">${a}</span></td><td class="right">${fmtM(v)}</td><td class="right">${fmtM(b)}</td><td class="right ${dif>=0?'pos':'neg'}">${fmtPct(dif)}</td></tr>`;
-  });
-  const difT = (totV-totB)/totB*100;
-  tbody.innerHTML += `<tr style="font-weight:700;"><td>TOTAL</td><td class="right">${fmtM(totV)}</td><td class="right">${fmtM(totB)}</td><td class="right ${difT>=0?'pos':'neg'}">${fmtPct(difT)}</td></tr>`;
 }
 
-/* ============ TAB: TOP CLIENTES ============ */
 function buildTopClientes(){
   const panel = document.getElementById('panel-topclientes');
   const top8 = clientesTop.slice(0,8);
+  const top7 = clientesTop.slice(0,7);
+  const top7sum = top7.reduce((s,c)=>s+c[1],0);
   panel.innerHTML = `
     <div class="grid charts-2">
-      <div class="card"><h3>Top 8 clientes — acumulado Ene–Jun 2026</h3><canvas id="chartTop8"></canvas></div>
-      <div class="card"><h3>Participación Top 8 vs resto</h3><canvas id="chartTopDonut"></canvas></div>
+      <div class="card"><h3>Ranking top 8 clientes ($M)</h3><canvas id="chartTop8"></canvas></div>
+      <div class="card"><h3>Participación en venta total</h3><canvas id="chartTopDonut"></canvas></div>
     </div>
     <div class="card" style="margin-top:16px;">
-      <h3>Ranking completo</h3>
-      <div class="tablewrap"><table id="tablaTop"><thead><tr><th>#</th><th>Cliente</th><th>Línea</th><th class="right">Venta acum.</th><th class="right">% del total</th></tr></thead><tbody></tbody></table></div>
+      <h3>Detalle top clientes</h3>
+      <div class="tablewrap"><table><thead><tr><th>#</th><th>Cliente</th><th>Línea</th><th class="right">Venta acum.</th><th class="right">% del total</th></tr></thead><tbody id="tblTop"></tbody></table></div>
     </div>
   `;
   charts.top8 = new Chart(document.getElementById('chartTop8'), {
@@ -257,29 +269,38 @@ function buildTopClientes(){
     data:{ labels: top8.map(c=>c[0]), datasets:[{data: top8.map(c=>c[1]), backgroundColor: top8.map(c=>COLOR[DATA.client_area[c[0]]])}] },
     options:{ indexAxis:'y', responsive:true, plugins:{legend:{display:false}}, scales:{x:{ticks:{callback:v=>fmtM(v)}}} }
   });
-  const top8sum = top8.reduce((s,c)=>s+c[1],0);
   charts.topdonut = new Chart(document.getElementById('chartTopDonut'), {
     type:'doughnut',
-    data:{ labels:['Top 8','Resto de clientes'], datasets:[{data:[top8sum, totalAcum-top8sum], backgroundColor:['#1F5C3A','#C9D3CE']}] },
-    options:{ responsive:true, plugins:{legend:{position:'bottom'}} }
+    data:{ labels: [...top7.map(c=>c[0]), 'Otros'], datasets:[{data:[...top7.map(c=>c[1]), totalAcum-top7sum], backgroundColor:['#1F5C3A','#2E8B57','#5B4AC8','#C07C10','#0B7A7A','#7A9E8F','#B0A6D8','#D9C9A8']}] },
+    options:{ responsive:true, plugins:{legend:{position:'bottom', labels:{boxWidth:10,font:{size:10.5}}}} }
   });
-  const tbody = document.querySelector('#tablaTop tbody');
+  const tbody = document.getElementById('tblTop');
+  let acc = 0;
   clientesTop.forEach((c,i)=>{
     const pct = c[1]/totalAcum*100;
-    tbody.innerHTML += `<tr><td>${i+1}</td><td>${c[0]}</td><td><span class="badge ${TAGCLASS[DATA.client_area[c[0]]]}">${DATA.client_area[c[0]]}</span></td><td class="right">${fmtM(c[1])}</td><td class="right">${pct.toFixed(1)}%</td></tr>`;
+    acc += c[1];
+    tbody.innerHTML += `<tr><td>${i+1}</td><td>${c[0]}</td><td class="linea-cell">${dot(DATA.client_area[c[0]])}${DATA.client_area[c[0]]}</td><td class="right">${fmtM(c[1])}</td><td class="right">${pct.toFixed(1)}%</td></tr>`;
+    if(i===7){
+      const pct8 = acc/totalAcum*100;
+      tbody.innerHTML += `<tr class="subtotal-row"><td colspan="3">Top 8 subtotal</td><td class="right">${fmtM(acc)}</td><td class="right">${pct8.toFixed(1)}%</td></tr>`;
+    }
   });
+  tbody.innerHTML += `<tr class="total-row"><td colspan="3">TOTAL</td><td class="right">${fmtM(totalAcum)}</td><td class="right">100%</td></tr>`;
 }
 
-/* ============ TAB: POR LINEA ============ */
 function buildPorLinea(){
   const panel = document.getElementById('panel-porlinea');
   panel.innerHTML = `
     <div class="grid charts-2">
-      <div class="card"><h3>Comparativo acumulado por línea</h3><canvas id="chartLineaBar"></canvas></div>
-      <div class="card"><h3>Composición mensual (stacked)</h3><canvas id="chartLineaStack"></canvas></div>
+      <div class="card"><h3>Comparativo por línea — Venta vs Budget acumulado ($M)</h3><canvas id="chartLineaBar"></canvas></div>
+      <div class="card"><h3>Composición mensual apilada ($M)</h3><canvas id="chartLineaStack"></canvas></div>
     </div>
     <div class="grid charts-1" style="margin-top:16px;">
-      <div class="card"><h3>Tendencia mensual por línea</h3><canvas id="chartLineaTrend"></canvas></div>
+      <div class="card"><h3>Evolución mensual por línea ($M)</h3><canvas id="chartLineaTrend"></canvas></div>
+    </div>
+    <div class="card" style="margin-top:16px;">
+      <h3>Detalle mensual por línea ($M)</h3>
+      <div class="tablewrap"><table><thead><tr><th>Línea / Mes</th>${MESES.map(m=>`<th class="right">${m}</th>`).join('')}<th class="right">Acumulado</th></tr></thead><tbody id="tblLinea"></tbody></table></div>
     </div>
   `;
   charts.lineaBar = new Chart(document.getElementById('chartLineaBar'), {
@@ -300,26 +321,43 @@ function buildPorLinea(){
     data:{ labels:MESES, datasets: AREAS.map(a=>({label:a, data:MESES.map(m=>DATA.monthly_area[m][a]), borderColor:COLOR[a], backgroundColor:COLOR[a]+'22', tension:.3, fill:false})) },
     options:{ responsive:true, plugins:{legend:{position:'bottom'}}, scales:{y:{ticks:{callback:v=>fmtM(v)}}} }
   });
+  const tbody = document.getElementById('tblLinea');
+  AREAS.forEach(a=>{
+    const cells = MESES.map(m=>`<td class="right">${fmtM(DATA.monthly_area[m][a])}</td>`).join('');
+    tbody.innerHTML += `<tr><td class="linea-cell">${dot(a)}${a}</td>${cells}<td class="right" style="font-weight:700;">${fmtM(areaAcum[a])}</td></tr>`;
+  });
+  const totCells = MESES.map(m=>`<td class="right">${fmtM(totalMes[m])}</td>`).join('');
+  tbody.innerHTML += `<tr class="total-row"><td>TOTAL</td>${totCells}<td class="right">${fmtM(totalAcum)}</td></tr>`;
 }
 
-/* ============ TABS: HC B2B / PSP / RESIDENCIA ============ */
 function buildAreaTab(id, areaName){
   const panel = document.getElementById('panel-'+id);
   const acum = areaAcum[areaName], bud = areaBudgetAcum[areaName];
   const dif = (acum-bud)/bud*100;
+  const bestMonth = MESES.reduce((best,m)=> DATA.monthly_area[m][areaName]>DATA.monthly_area[best][areaName]?m:best, MESES[0]);
+  const bestVal = DATA.monthly_area[bestMonth][areaName];
+  const bestBud = DATA.monthly_area_budget[bestMonth][areaName];
+  const bestPct = (bestVal-bestBud)/bestBud*100;
+  const part = acum/totalAcum*100;
+  const esLider = areaName===lineaLider;
   panel.innerHTML = `
     <div class="grid kpis">
-      <div class="card kpi"><div class="label">Venta acumulada</div><div class="value">${fmtM(acum)}</div></div>
-      <div class="card kpi"><div class="label">Budget acumulado</div><div class="value">${fmtM(bud)}</div></div>
-      <div class="card kpi"><div class="label">Desviación vs Budget</div><div class="value ${dif>=0?'pos':'neg'}">${fmtPct(dif)}</div></div>
+      <div class="card kpi"><div class="label">Venta acumulada</div><div class="value">${fmtM(acum)}</div><div class="delta ${dif>=0?'pos':'neg'}">vs Budget ${fmtPct(dif)}</div></div>
+      <div class="card kpi"><div class="label">Budget acumulado</div><div class="value">${fmtM(bud)}</div><div class="delta">Ene–Jun</div></div>
+      <div class="card kpi"><div class="label">Mejor mes</div><div class="value">${fmtM(bestVal)}</div><div class="delta">${bestMonth} · ${fmtPct(bestPct)} Bgt</div></div>
+      <div class="card kpi"><div class="label">Participación</div><div class="value">${part.toFixed(1)}%</div><div class="delta">${esLider?'Línea líder':'del total'}</div></div>
     </div>
     <div class="grid charts-2">
-      <div class="card"><h3>Evolución mensual — ${areaName}</h3><canvas id="chart_${id}_evol"></canvas></div>
-      <div class="card"><h3>Desviación vs Budget por mes</h3><canvas id="chart_${id}_dev"></canvas></div>
+      <div class="card"><h3>${areaName} — Venta vs Budget mensual ($M)</h3><canvas id="chart_${id}_evol"></canvas></div>
+      <div class="card"><h3>${areaName} — Desviación vs Budget ($M)</h3><canvas id="chart_${id}_dev"></canvas></div>
     </div>
     <div class="card" style="margin-top:16px;">
-      <h3>Clientes de ${areaName} — acumulado Ene–Jun</h3>
-      <div class="tablewrap"><table><thead><tr><th>Cliente</th><th class="right">Venta acum.</th></tr></thead><tbody id="tbody_${id}"></tbody></table></div>
+      <h3>${areaName} — Detalle mensual</h3>
+      <div class="tablewrap"><table><thead><tr><th>Mes</th><th class="right">Venta</th><th class="right">Budget</th><th class="right">Diferencia</th><th class="right">vs Budget</th></tr></thead><tbody id="tbl_${id}_detalle"></tbody></table></div>
+    </div>
+    <div class="card" style="margin-top:16px;">
+      <h3>${areaName} — Clientes · Venta mensual ($M)</h3>
+      <div class="tablewrap"><table><thead><tr><th>#</th><th>Cliente</th>${MESES.map(m=>`<th class="right">${m.slice(0,3)}</th>`).join('')}<th class="right">Total</th></tr></thead><tbody id="tbl_${id}_clientes"></tbody></table></div>
     </div>
   `;
   charts[id+'evol'] = new Chart(document.getElementById(`chart_${id}_evol`), {
@@ -332,27 +370,43 @@ function buildAreaTab(id, areaName){
   });
   charts[id+'dev'] = new Chart(document.getElementById(`chart_${id}_dev`), {
     type:'bar',
-    data:{ labels:MESES, datasets:[{label:'Dif. vs Budget %', data:MESES.map(m=>{ const v=DATA.monthly_area[m][areaName], b=DATA.monthly_area_budget[m][areaName]; return ((v-b)/b*100); }), backgroundColor: MESES.map(m=>{ const v=DATA.monthly_area[m][areaName], b=DATA.monthly_area_budget[m][areaName]; return (v-b)>=0?'#1E8F5C':'#C43D3D'; }) }] },
-    options:{ responsive:true, plugins:{legend:{display:false}}, scales:{y:{ticks:{callback:v=>v.toFixed(0)+'%'}}} }
+    data:{ labels:MESES, datasets:[{label:'Diferencia', data:MESES.map(m=>DATA.monthly_area[m][areaName]-DATA.monthly_area_budget[m][areaName]), backgroundColor: MESES.map(m=>(DATA.monthly_area[m][areaName]-DATA.monthly_area_budget[m][areaName])>=0?'#1E8F5C':'#C43D3D') }] },
+    options:{ responsive:true, plugins:{legend:{display:false}}, scales:{y:{ticks:{callback:v=>fmtM(v)}}} }
   });
-  const tbody = document.getElementById('tbody_'+id);
-  Object.entries(DATA.client_total).filter(([c])=>DATA.client_area[c]===areaName).sort((a,b)=>b[1]-a[1]).forEach(([c,v])=>{
-    tbody.innerHTML += `<tr><td>${c}</td><td class="right">${fmtM(v)}</td></tr>`;
+  const tdet = document.getElementById(`tbl_${id}_detalle`);
+  MESES.forEach(m=>{
+    const v = DATA.monthly_area[m][areaName], b = DATA.monthly_area_budget[m][areaName];
+    const d = v-b, pct = d/b*100;
+    tdet.innerHTML += `<tr><td>${m}</td><td class="right">${fmtM(v)}</td><td class="right">${fmtM(b)}</td><td class="right ${d>=0?'pos':'neg'}">${fmtMSign(d)}</td><td class="right ${pct>=0?'pos':'neg'}">${fmtPct(pct)}</td></tr>`;
+  });
+  const dT = acum-bud, pctT = dT/bud*100;
+  tdet.innerHTML += `<tr class="total-row"><td>Total</td><td class="right">${fmtM(acum)}</td><td class="right">${fmtM(bud)}</td><td class="right ${dT>=0?'pos':'neg'}">${fmtMSign(dT)}</td><td class="right ${pctT>=0?'pos':'neg'}">${fmtPct(pctT)}</td></tr>`;
+
+  const tcli = document.getElementById(`tbl_${id}_clientes`);
+  const clientesArea = Object.entries(DATA.client_total).filter(([c])=>DATA.client_area[c]===areaName).sort((a,b)=>b[1]-a[1]);
+  clientesArea.forEach(([c,total],i)=>{
+    const cells = MESES.map(m=>`<td class="right">${fmtM(DATA.client_month[c][m])}</td>`).join('');
+    tcli.innerHTML += `<tr><td>${i+1}</td><td>${c}</td>${cells}<td class="right" style="font-weight:700;">${fmtM(total)}</td></tr>`;
   });
 }
 
-/* ============ TAB: CLIENTES ============ */
 function buildClientes(){
   const panel = document.getElementById('panel-clientes');
   const top15 = clientesTop.slice(0,15);
+  const c1 = clientesTop[0];
   panel.innerHTML = `
+    <div class="grid kpis">
+      <div class="card kpi"><div class="label">Clientes activos</div><div class="value">${numClientesActivos}</div><div class="delta">con venta &gt; $0</div></div>
+      <div class="card kpi"><div class="label">Venta total acum.</div><div class="value">${fmtM(totalAcum)}</div><div class="delta">Ene–Jun 2026</div></div>
+      <div class="card kpi"><div class="label">Cliente #1</div><div class="value" style="font-size:18px;">${c1[0]}</div><div class="delta">${fmtM(c1[1])} · ${(c1[1]/totalAcum*100).toFixed(1)}%</div></div>
+    </div>
     <div class="grid charts-1" style="margin-bottom:16px;">
-      <div class="card"><h3>Top 15 clientes — acumulado Ene–Jun 2026</h3><canvas id="chartClientesTop15"></canvas></div>
+      <div class="card"><h3>Top 15 clientes — Venta acumulada ($M)</h3><canvas id="chartClientesTop15"></canvas></div>
     </div>
     <div class="card">
-      <h3>Todos los clientes (${clientesTop.length})</h3>
+      <h3>Detalle por cliente — Venta mensual ($M)</h3>
       <input class="searchbox" id="buscadorClientes" placeholder="Buscar cliente...">
-      <div class="tablewrap"><table id="tablaClientes"><thead><tr><th>Cliente</th><th>Línea</th>${MESES.map(m=>`<th class="right">${m.slice(0,3)}</th>`).join('')}<th class="right">Total</th></tr></thead><tbody></tbody></table></div>
+      <div class="tablewrap"><table id="tablaClientes"><thead><tr><th>#</th><th>Cliente</th><th>Línea</th>${MESES.map(m=>`<th class="right">${m.slice(0,3)}</th>`).join('')}<th class="right">Total</th></tr></thead><tbody></tbody></table></div>
     </div>
   `;
   charts.clientesTop15 = new Chart(document.getElementById('chartClientesTop15'), {
@@ -363,16 +417,15 @@ function buildClientes(){
   function renderTabla(filter){
     const tbody = document.querySelector('#tablaClientes tbody');
     tbody.innerHTML = '';
-    clientesTop.filter(c=>c[0].toLowerCase().includes(filter.toLowerCase())).forEach(([c,total])=>{
+    clientesTop.filter(c=>c[0].toLowerCase().includes(filter.toLowerCase())).forEach(([c,total],i)=>{
       const cells = MESES.map(m=>`<td class="right">${(DATA.client_month[c][m]/1e6).toLocaleString('es-CL',{minimumFractionDigits:1,maximumFractionDigits:1})}</td>`).join('');
-      tbody.innerHTML += `<tr><td>${c}</td><td><span class="badge ${TAGCLASS[DATA.client_area[c]]}">${DATA.client_area[c]}</span></td>${cells}<td class="right" style="font-weight:700;">${fmtM(total)}</td></tr>`;
+      tbody.innerHTML += `<tr><td>${i+1}</td><td>${c}</td><td class="linea-cell">${dot(DATA.client_area[c])}${DATA.client_area[c]}</td>${cells}<td class="right" style="font-weight:700;">${fmtM(total)}</td></tr>`;
     });
   }
   renderTabla('');
   document.getElementById('buscadorClientes').addEventListener('input', e=>renderTabla(e.target.value));
 }
 
-/* Init */
 buildTab('resumen'); built['resumen']=true;
 </script>
 </body>
